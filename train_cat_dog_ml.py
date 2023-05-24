@@ -67,6 +67,7 @@ def save_model(model):
     save_keras_model(model, sub_directory, "cat_dog_classifier.keras")
     save_ios_mlmodel(model, sub_directory, "cat_dog_classifier_ios.mlmodel")
     save_tflite_mlmodel(model, sub_directory, "cat_dog_classifier_android.tflite")
+    #leaving unsupported flatbuffers conflict
     # save_model_with_directory_check(model, "cat_dog_classifier_onnx_os.onnx")
 
 print("TensorFlow version")
