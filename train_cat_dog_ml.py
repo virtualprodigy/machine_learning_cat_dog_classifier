@@ -32,7 +32,7 @@ def save_keras_model(model: Model, file_directory, file_name: str):
 def save_ios_mlmodel(model: Model, file_directory, file_name: str):
     # Save the model
     full_path = os.path.join(file_directory, file_name)
-    coreml_model = coremltools.converters.keras.convert(model)
+    coreml_model = coremltools.converters.convert(model)
     # Save the Core ML model with the .mlmodel extension
     coreml_model.save(full_path)
     print("MLModel(iOS) saved to:", full_path)
@@ -127,7 +127,7 @@ history = trained_model.fit(
     steps_per_epoch=len(train_generator),
     validation_data=validation_generator,
     validation_steps=len(validation_generator),
-    epochs=2,
+    epochs=1,
     verbose=1
 )
 
