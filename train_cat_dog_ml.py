@@ -37,6 +37,17 @@ def save_ios_mlmodel(model: Model, file_directory, file_name: str):
     coreml_model.save(full_path)
     print("MLModel(iOS) saved to:", full_path)
 
+def save_tflite_mlmodel(model: Model, file_directory, file_name: str):
+    # Convert the keras model
+    full_path = os.path.join(file_directory, file_name)
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    # returns a byte array
+    tflite_model = converter.convert()
+    # Save the TFLite Model
+    with open(full_path, "wb") as tflite_file:
+        tflite_file.write(tflite_model)
+    print("TFLite Model saved to:", full_path)
+
 def save_model(model):
     # Check if the directory exists, create it if not
     output_directory = "./model_output"
@@ -55,7 +66,7 @@ def save_model(model):
     save_h5_model(model, sub_directory, "cat_dog_classifier_legacy.h5")
     save_keras_model(model, sub_directory, "cat_dog_classifier.keras")
     save_ios_mlmodel(model, sub_directory, "cat_dog_classifier_ios.mlmodel")
-    # save_model_with_directory_check(model, "cat_dog_classifier_android.tflite")
+    save_tflite_mlmodel(model, sub_directory, "cat_dog_classifier_android.tflite")
     # save_model_with_directory_check(model, "cat_dog_classifier_onnx_os.onnx")
 
 print("TensorFlow version")
