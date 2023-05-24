@@ -13,7 +13,7 @@ Welcome to this humble little project. This is a Machine Learning Project. It is
 1. Setup TensorFlow -> https://www.tensorflow.org/install/pip
 	2. Mac Users follow these instructions -> https://developer.apple.com/metal/tensorflow-plugin/
 2. At this point you should have setup you miniconda envirnoment. In your envirnoment run this pip command
-	3. `python -m pip install matplotlib pillow opencv-python numpy keras scipy`
+	3. `python -m pip install matplotlib pillow opencv-python numpy keras scipy coremltools`
 3. Now you need to get your photos from somewhere, kaggle.com is pretty nice, check them out
 4. run your code
 	5. resize photos so you save on memory during training. Use my script for it 
