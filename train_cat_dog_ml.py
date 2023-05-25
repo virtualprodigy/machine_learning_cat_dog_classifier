@@ -5,6 +5,7 @@ from tensorflow.keras.models import Sequential
 import os
 from PIL import Image
 from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input
 from datetime import datetime
 import coremltools
 
@@ -30,10 +31,22 @@ def save_keras_model(model: Model, file_directory, file_name: str):
     print("Keras Model saved to:", full_path)
 
 def save_ios_mlmodel(model: Model, file_directory, file_name: str):
-    # Save the model
-    full_path = os.path.join(file_directory, file_name)
-    coreml_model = coremltools.converters.convert(model)
+    # add input for images when model is used on iOS
+    input_shape = (224, 224, 3)  # Adjust dimensions according to your image size and channels
+    input_layer = Input(shape=input_shape, dtype='float32', name='input')
+
+    #creates model that supports inputs
+    combined_model = Model(inputs=input_layer, outputs=model(input_layer))
+    coreml_model = coremltools.converters.convert(
+        combined_model,
+        inputs=[coremltools.ImageType()]
+        # output_names=['output'],
+        # image_input_names=['input'],
+        # image_scale=1.0 / 255.0
+    )
+
     # Save the Core ML model with the .mlmodel extension
+    full_path = os.path.join(file_directory, file_name)
     coreml_model.save(full_path)
     print("MLModel(iOS) saved to:", full_path)
 
@@ -68,13 +81,8 @@ def save_model(model):
     save_ios_mlmodel(model, sub_directory, "cat_dog_classifier_ios.mlmodel")
     save_tflite_mlmodel(model, sub_directory, "cat_dog_classifier_android.tflite")
 
-print("TensorFlow version")
-print(tf.__version__)
-print("--------")
-
-# Specify GPU for Apple Metal 
-print("physical device list")
-print("*********")
+print(f"TensorFlow version  {tf.__version__}")
+print(f"Coremltools version {coremltools.__version__}")
 
 # Check if folder paths are correct
 def is_valid_folder_path(path):
@@ -137,7 +145,7 @@ history = trained_model.fit(
     steps_per_epoch=len(train_generator),
     validation_data=validation_generator,
     validation_steps=len(validation_generator),
-    epochs=200,
+    epochs=1,
     verbose=1
 )
 
